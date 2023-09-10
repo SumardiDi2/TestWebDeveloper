@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="http://localhost:8081/barang">Barang</a>
+                <a class="nav-link" href="http://localhost:8081/transaksi">Transaksi</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <a href="http://localhost:8081/formBarang" type="button" class="btn btn-primary">Add Button</a>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nama Barang</th>
+            <th scope="col">Stok</th>
+            <th scope="col">Jenis Barang</th>
+        </tr>
+        </thead>
+        <tbody id="responseBody">
+
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $.ajax({
+        url: 'http://localhost:8080/api/barang/getAll',
+        dataType: 'json',
+        success: function(data) {
+            for (var i=0; i < data.length; i++) {
+                $('#responseBody').append("<tr>\
+                                        <td>\
+                                        <a href='http://localhost:8081/formBarangUpdate?id=" + data[i].id + "' type='button' class='btn btn-primary'>Update</a>\
+                                        <a href='#' onClick='deleteBuku(" + data[i].id + ");' type='button' class='btn btn-danger'>Delete</a>\
+                                        </td>\
+										<td>"+data[i].name+"</td>\
+										<td>"+data[i].stok+"</td>\
+										<td>"+data[i].jenisBarang+"</td>\
+										</tr>");
+            }
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert('Error: ' + textStatus + ' - ' + errorThrown);
+        }
+    });
+
+    function deleteBuku(id){
+        $.ajax({
+            url: 'http://localhost:8080/api/barang/delete/' + id,
+            success: function(data) {
+                window.location.href = "http://localhost:8081/buku";
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                alert('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+        });
+    }
+</script>
+</body>
+</html>
